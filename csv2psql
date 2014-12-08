@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+import re
+import sys
+import csv
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("files", help="path to CSVs, default stdin", nargs="*")
+
+args = parser.parse_args()
+
+files = args.files
+if not files:
+    files = ["-"]
+
+records = []
+max_field_sizes = {}
+number_looking_fields = {}
+
+fieldnames = []
+
+for file in files:
+    if file == "-":
+        infp = sys.stdin
+    else:
+        infp = open(file, "r")
+
+    reader = csv.DictReader(infp)
+
+    for record in reader:
+
+        if not fieldnames:
+            fieldnames = reader.fieldnames
+
+        records.append(record)
+
+        for key, value in record.items():
+            if key not in max_field_sizes:
+                max_field_sizes[key] = len(value)
+            if max_field_sizes[key] < len(value):
+                max_field_sizes[key] = len(value)
+            if max_field_sizes[key] < len(key):
+                max_field_sizes[key] = len(key)
+
+            if key not in number_looking_fields:
+                number_looking_fields[key] = True
+            if not re.search(r'^-?([1-9]+[0-9]*|0)(\.[0-9]+)?$', value):
+                number_looking_fields[key] = False
+
+    if file != "-":
+        infp.close()
+
+header_fmt_parts = []
+record_fmt_parts = []
+sep_parts = []
+for field in fieldnames:
+    header_fmt_parts.append(" {:^" + str(max_field_sizes[field]) + "} ")
+
+    align = "<"
+    if number_looking_fields[field]:
+        align = ">"
+
+    record_fmt_parts.append(" {:" + align + str(max_field_sizes[field]) + "} ")
+    sep_parts.append("-" + ("-" * max_field_sizes[field]) + "-")
+
+header_fmt_str = "|".join(header_fmt_parts)
+record_fmt_str = "|".join(record_fmt_parts)
+
+print(header_fmt_str.format(*fieldnames))
+print("+".join(sep_parts))
+
+for record in records:
+    values = [record[f] for f in fieldnames]
+    print(record_fmt_str.format(*values))
+

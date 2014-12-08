@@ -1,0 +1,30 @@
+Take one or more CSV files and transform them into an aligned table a la psql.
+
+Requires python.
+
+Examples:
+
+~$ cat /tmp/a.csv
+foo,bar,baz
+1,2,3
+4,5,6
+~$ cat /tmp/b.csv
+foo,bar,baz
+a,b,c
+e,f,g
+~$ csv2psql /tmp/a.csv /tmp/b.csv
+ foo | bar | baz 
+-----+-----+-----
+ 1   | 2   | 3   
+ 4   | 5   | 6   
+ a   | b   | c   
+ e   | f   | g  
+
+You can also read from stdin using - or by specifying no files at all:
+
+~$ cat /tmp/a.csv | csv2jpsql
+ foo | bar | baz 
+-----+-----+-----
+   1 |   2 |   3 
+   4 |   5 |   6 
+
