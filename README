@@ -22,7 +22,7 @@ e,f,g
 
 You can also read from stdin using - or by specifying no files at all:
 
-~$ cat /tmp/a.csv | csv2jpsql
+~$ cat /tmp/a.csv | csv2psql
  foo | bar | baz 
 -----+-----+-----
    1 |   2 |   3 
