@@ -31,7 +31,7 @@ for file in files:
     else:
         infp = open(file, "r")
 
-    reader = csv.DictReader(infp)
+    reader = csv.DictReader(infp, delimiter=args.delimiter)
 
     for record in reader:
 
