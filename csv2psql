@@ -72,10 +72,12 @@ for field in fieldnames:
 header_fmt_str = "|".join(header_fmt_parts)
 record_fmt_str = "|".join(record_fmt_parts)
 
-print(header_fmt_str.format(*fieldnames))
-print("+".join(sep_parts))
+try:
+    print(header_fmt_str.format(*fieldnames))
+    print("+".join(sep_parts))
 
-for record in records:
-    values = [record[f] for f in fieldnames]
-    print(record_fmt_str.format(*values))
-
+    for record in records:
+        values = [record[f] for f in fieldnames]
+        print(record_fmt_str.format(*values))
+except BrokenPipeError:
+    pass
