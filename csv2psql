@@ -11,6 +11,7 @@ csv.field_size_limit(sys.maxsize)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("files", help="path to CSVs, default stdin", nargs="*")
+parser.add_argument("--delimiter", help="delimiter of csv", default=",")
 
 args = parser.parse_args()
 
